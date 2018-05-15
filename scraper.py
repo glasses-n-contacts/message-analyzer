@@ -1,7 +1,7 @@
-import subprocess
 import sqlite3
-import sys
 import nltk
+import os
+from variables import *
 
 
 class MessageScraper:
@@ -23,6 +23,15 @@ class MessageScraper:
                               "select handle_id from chat_handle_join where chat_id=(" +
                               "select ROWID from chat where guid='iMessage;-;" + self.contact_info + "')" +
                               ")")
+
+        directory = "data/"
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+
+        # Write everything to file
+        f0 = open(directory + "message_data0.txt", "w+")
+        f1 = open(directory + "message_data1.txt", "w+")
+
         for result in results:
             # Your index is 1, the other person's index is 0
             sender_index, message = result
@@ -30,11 +39,11 @@ class MessageScraper:
             print(tokens)
             if sender_index is 0:
                 # do something with your own texts
-                continue
+                f0.write(message)
             else:  # do something with other person's texts
-                continue
+                f1.write(message)
 
 
 if __name__ == '__main__':
-    scraper = MessageScraper('/Users/lucyzhang/Library/Messages/chat.db', 'spothorse9.lucy@gmail.com')
+    scraper = MessageScraper(ABSOLUTE_PATH, CONTACT_INFO)
     scraper.retrieve_texts()
