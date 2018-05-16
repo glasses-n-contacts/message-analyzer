@@ -1,6 +1,7 @@
 from sklearn.feature_extraction.text import CountVectorizer
 import nltk
 from nltk.corpus import stopwords
+from nltk.stem import PorterStemmer
 import string
 from scraper import MessageScraper
 from variables import *
@@ -14,15 +15,19 @@ class MessageAnalyzer:
     def __init__(self, text):
         self.text = text
 
-    def word_tokenize(self):
-        all_tokens = [nltk.word_tokenize(message.translate(string.punctuation)) for message in self.text]
+    def word_tokenize(self, extend_list = False):
+        all_tokens = []
+        ps = PorterStemmer()
+        if extend_list:
+            for message in self.text:
+                all_tokens.extend(nltk.word_tokenize(message.translate(string.punctuation)))
+            all_tokens = [ps.stem(w) for w in all_tokens if w not in stop_words]
+        else:
+            all_tokens = [nltk.word_tokenize(message.translate(string.punctuation)) for message in self.text]
         return all_tokens
 
     def word_frequencies(self):
-        tokens = []
-        for message in self.text:
-            tokens.extend(nltk.word_tokenize(message.translate(string.punctuation)))
-        tokens = [w for w in tokens if w not in stop_words]
+        tokens = self.word_tokenize(True)
         freqs = nltk.FreqDist(tokens)
         return freqs
 
