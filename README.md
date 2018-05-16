@@ -4,9 +4,11 @@ Analyzing our text/fb messenger messages
 
 ## Setup:
 Create a variables.py file with the following variables:
+```
 CONTACT_INFO = <phone number or apple id, whichever is used in imessage, of the recipient of your messages>
 ABSOLUTE_PATH = <absolute path to sqlite db, corresponds to ~/Library/Messages/chat.db>
 NAME = <Your first name used in fb messenger>
+```
 
 ## Classes:
 
