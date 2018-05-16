@@ -3,6 +3,7 @@ import os
 from variables import *
 from bs4 import BeautifulSoup
 
+
 class MessageScraper:
 
     """
