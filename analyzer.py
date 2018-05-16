@@ -29,8 +29,8 @@ class MessageAnalyzer:
 
 
 if __name__ == '__main__':
-    scraper = MessageScraper(ABSOLUTE_PATH, CONTACT_INFO)
-    my_texts, other_texts = scraper.get_texts()
+    scraper = MessageScraper(ABSOLUTE_PATH, CONTACT_INFO, NAME)
+    my_texts, other_texts = scraper.all_messages()
     analyzer = MessageAnalyzer(my_texts)
     analyzer.tokenize()
     tokens = analyzer.word_tokenize()
