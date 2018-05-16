@@ -1,8 +1,7 @@
 import sqlite3
-import nltk
 import os
 from variables import *
-
+from bs4 import BeautifulSoup
 
 class MessageScraper:
 
@@ -38,8 +37,6 @@ class MessageScraper:
         for result in results:
             # Your index is 1, the other person's index is 0
             sender_index, message = result
-            # tokens = nltk.word_tokenize(message)
-            # print(tokens)
             if sender_index is 0:
                 if write_to_file:
                     # do something with your own texts
@@ -51,7 +48,23 @@ class MessageScraper:
                 other_texts.append(message)
         return my_texts, other_texts
 
+    @staticmethod
+    def get_messenger_messages():
+        with open("data/BillLucyMessenger.html", encoding="utf-8") as f:
+            data = f.read()
+            soup = BeautifulSoup(data, "html.parser")
+            divs = soup.find_all("div", {"class": "_41ud"})
+            for div in divs:
+                messager_div = div.find("h5")
+                messager_name = messager_div.text
+                print(messager_name)
+
+                message_div = div.find("div", {"class": "clearfix"})
+                message = message_div.text
+                print(message)
+
 
 if __name__ == '__main__':
     scraper = MessageScraper(ABSOLUTE_PATH, CONTACT_INFO)
-    scraper.get_texts()
+    #scraper.get_texts()
+    MessageScraper.get_messenger_messages()
