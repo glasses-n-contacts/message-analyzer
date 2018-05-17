@@ -14,8 +14,9 @@ class MessageAnalyzer:
 
     def __init__(self, text):
         self.text = text
+        self.text_clf = None
 
-    def word_tokenize(self, extend_list = False):
+    def word_tokenize(self, extend_list=False):
         all_tokens = []
         ps = PorterStemmer()
         if extend_list:
@@ -28,8 +29,7 @@ class MessageAnalyzer:
 
     def word_frequencies(self):
         tokens = self.word_tokenize(True)
-        freqs = nltk.FreqDist(tokens)
-        return freqs
+        return nltk.FreqDist(tokens)
 
     def tokenize(self):
         # create the transform
@@ -44,7 +44,6 @@ class MessageAnalyzer:
         print(vector.shape)
         print(type(vector))
         print(vector.toarray())
-
 
 if __name__ == '__main__':
     scraper = MessageScraper(ABSOLUTE_PATH, CONTACT_INFO, NAME)
