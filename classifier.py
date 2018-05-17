@@ -2,7 +2,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.naive_bayes import MultinomialNB
-from sklearn.linear_model import SGDClassifier
+from sklearn.linear_model import SGDClassifier, LogisticRegression
 import numpy as np
 
 
@@ -14,10 +14,19 @@ class TextClassifier:
         self.target_indices = target_indices
         self.text_clf = None
 
-    def train(self):
-        text_clf = Pipeline([('vect', CountVectorizer()), ('tfidf', TfidfTransformer()),
+    def train(self, classifier_type='svm'):
+        if classifier_type == 'svm':
+            text_clf = Pipeline([('vect', CountVectorizer()), ('tfidf', TfidfTransformer()),
                              ('clf-svm',
                               SGDClassifier(loss='hinge', penalty='l2', alpha=1e-3, n_iter=5, random_state=42))])
+        elif classifier_type == 'logistic':
+            text_clf = Pipeline([('vect', CountVectorizer(stop_words='english')),
+                                 ('tfidf', TfidfTransformer()),
+                                 ('clf', LogisticRegression())])
+        else:  # default: naive bayes
+            text_clf = Pipeline([('vect', CountVectorizer(stop_words='english')),
+                             ('tfidf', TfidfTransformer()),
+                             ('clf', MultinomialNB())])
         self.text_clf = text_clf.fit(self.training_data, self.target_indices)
 
     def predict(self, predict_data, correct_values=None):

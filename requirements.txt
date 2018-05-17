@@ -1,3 +1,4 @@
 nltk
 sklearn
 bs4
+numpy
