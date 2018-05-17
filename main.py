@@ -25,5 +25,9 @@ if __name__ == '__main__':
 
     targets = ['Lucy', 'Bill']
     classifier = TextClassifier(training_data, targets, target_indices)
-    classifier.train('svm')
-    classifier.predict(test_data, test_target_indices)
+    # classifier.train('svm')
+    # classifier.predict(test_data, test_target_indices)
+
+    print('----------------------')
+    classifier.train_nltk()
+    classifier.test_nltk(test_data)

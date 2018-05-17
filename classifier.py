@@ -4,6 +4,7 @@ from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.linear_model import SGDClassifier, LogisticRegression
 import numpy as np
+import nltk
 
 
 class TextClassifier:
@@ -13,6 +14,20 @@ class TextClassifier:
         self.targets = targets
         self.target_indices = target_indices
         self.text_clf = None
+
+    # bag of words model where every word is a feature name w/ value of True
+    @staticmethod
+    def word_features(words):
+        return dict([(word, True) for word in words])
+
+    def train_nltk(self):
+        features = [(self.word_features(words), self.target_indices[i]) for i, words in enumerate(self.training_data)]
+        self.text_clf = nltk.NaiveBayesClassifier.train(features)
+
+    def test_nltk(self, test_data):
+        test_features = [(self.word_features(words), self.target_indices[i]) for i, words in enumerate(test_data)]
+        print("Classifier accuracy percent:", (nltk.classify.accuracy(self.text_clf, test_features)) * 100)
+        self.text_clf.show_most_informative_features(15)
 
     def train(self, classifier_type='svm'):
         if classifier_type == 'svm':
