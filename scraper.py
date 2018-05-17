@@ -40,19 +40,20 @@ class MessageScraper:
         for result in results:
             # Your index is 1, the other person's index is 0
             sender_index, message = result
-            if (message.startswith('Laughed at ') or message.startswith('Liked "') or
-                message.startswith('Loved "') or message.startswith('Disliked "') or
-                    message.startswith('Emphasized "') or message.startswith('Laughed at ')):
+            if (message.startswith('Laughed at') or message.startswith('Liked “') or
+                message.startswith('Loved “') or message.startswith('Disliked “') or
+                message.startswith('Emphasized “') or message.startswith('Laughed at ') or
+                    len(message) == 0):
                 continue
             if sender_index is 0:
                 if write_to_file:
-                    # do something with your own texts
+                    # do something with others' texts
                     f0.write(message)
-                my_texts.append(message)
-            else:  # do something with other person's texts
+                other_texts.append(message)
+            else:  # do something with your own texts
                 if write_to_file:
                     f1.write(message)
-                other_texts.append(message)
+                my_texts.append(message)
         return my_texts, other_texts
 
     @staticmethod
