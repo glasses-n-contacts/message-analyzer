@@ -5,7 +5,7 @@ Analyzing our text/fb messenger messages
 ## Setup:
 Uses Python 3.6.5.
 
-1. Create a variables.py file in the project root directory with the following variables:
+1. Create a `variables.py` file in the project root directory with the following variables:
 ```
 CONTACT_INFO = <phone number or apple id, whichever is used in imessage, of the recipient of your messages>
 ABSOLUTE_PATH = <absolute path to sqlite db, corresponds to ~/Library/Messages/chat.db>
@@ -24,6 +24,9 @@ NAME = <Your first name used in fb messenger>
 To get this page source, go to messenger.com, scroll all the way to the beginning of the conversation with the user of
 interest, and click "save as" to save it as an html file. Save it in a data/ directory at the root of the project.
 
-2. Analyzer
+2. MessageAnalyzer
 * Analyzes the actual text
 
+3. TextClassifier
+* Classification of text. Currently used to determine if a text is from Lucy or Bill.
+* Current options: Naive bayes, logistic regression, svm.
