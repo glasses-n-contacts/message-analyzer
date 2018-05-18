@@ -45,6 +45,7 @@ class MessageAnalyzer:
         print(type(vector))
         print(vector.toarray())
 
+
 if __name__ == '__main__':
     scraper = MessageScraper(ABSOLUTE_PATH, CONTACT_INFO, NAME)
     my_texts, other_texts = scraper.all_messages()

@@ -3,25 +3,43 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.linear_model import SGDClassifier, LogisticRegression
+from analyzer import MessageAnalyzer
 import numpy as np
 import nltk
+import string
 
 
 class TextClassifier:
 
     def __init__(self, training_data, targets, target_indices):
-        self.training_data = training_data
+        self.training_data = [message.translate(string.punctuation) for message in training_data]
         self.targets = targets
         self.target_indices = target_indices
         self.text_clf = None
+        self.analyzer = MessageAnalyzer(self.training_data)
+        freqs = self.analyzer.word_frequencies()
+        self.most_common_words = freqs.most_common(100)
+        print(self.most_common_words)
 
     # bag of words model where every word is a feature name w/ value of True
     @staticmethod
     def word_features(words):
         return dict([(word, True) for word in words])
 
+    def find_features(self, line):
+        features = {}
+        for word_feature, frequency in self.most_common_words:
+            features[word_feature] = (word_feature in line)
+        return features
+
+    def create_features(self):
+        feature_sets = [(self.find_features(words), self.target_indices[i]) for i, words in enumerate(self.training_data)]
+        print('Feature sets:')
+        print(feature_sets)
+        return feature_sets
+
     def train_nltk(self):
-        features = [(self.word_features(words), self.target_indices[i]) for i, words in enumerate(self.training_data)]
+        features = self.create_features()
         self.text_clf = nltk.NaiveBayesClassifier.train(features)
 
     def test_nltk(self, test_data):

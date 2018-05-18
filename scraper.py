@@ -40,7 +40,7 @@ class MessageScraper:
         for result in results:
             # Your index is 1, the other person's index is 0
             sender_index, message = result
-            if (message.startswith('Laughed at') or message.startswith('Liked “') or
+            if (message is None or message.startswith('Laughed at') or message.startswith('Liked “') or
                 message.startswith('Loved “') or message.startswith('Disliked “') or
                 message.startswith('Emphasized “') or message.startswith('Laughed at ') or
                     len(message) == 0):
