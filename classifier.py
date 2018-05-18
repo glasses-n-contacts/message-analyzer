@@ -19,7 +19,7 @@ class TextClassifier:
         self.analyzer = MessageAnalyzer(self.training_data)
         freqs = self.analyzer.word_frequencies()
         self.most_common_words = freqs.most_common(100)
-        print(self.most_common_words)
+        #print(self.most_common_words)
 
     # bag of words model where every word is a feature name w/ value of True
     @staticmethod
@@ -29,11 +29,11 @@ class TextClassifier:
     def find_features(self, line):
         features = {}
         for word_feature, frequency in self.most_common_words:
-            features[word_feature] = (word_feature in line)
+            features[word_feature] = (word_feature in line.lower())
         return features
 
     def create_features(self):
-        feature_sets = [(self.find_features(words), self.target_indices[i]) for i, words in enumerate(self.training_data)]
+        feature_sets = [(self.find_features(words), self.targets[self.target_indices[i]]) for i, words in enumerate(self.training_data)]
         print('Feature sets:')
         print(feature_sets)
         return feature_sets
@@ -43,7 +43,7 @@ class TextClassifier:
         self.text_clf = nltk.NaiveBayesClassifier.train(features)
 
     def test_nltk(self, test_data):
-        test_features = [(self.word_features(words), self.target_indices[i]) for i, words in enumerate(test_data)]
+        test_features = [(self.word_features(words), self.targets[self.target_indices[i]]) for i, words in enumerate(test_data)]
         print("Classifier accuracy percent:", (nltk.classify.accuracy(self.text_clf, test_features)) * 100)
         self.text_clf.show_most_informative_features(15)
 
