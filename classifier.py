@@ -34,8 +34,8 @@ class TextClassifier:
 
     def create_features(self):
         feature_sets = [(self.find_features(words), self.targets[self.target_indices[i]]) for i, words in enumerate(self.training_data)]
-        print('Feature sets:')
-        print(feature_sets)
+        # print('Feature sets:')
+        # print(feature_sets)
         return feature_sets
 
     def train_nltk(self):

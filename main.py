@@ -23,11 +23,11 @@ if __name__ == '__main__':
     training_data = train_my_texts + train_other_texts
     test_data = test_my_texts + test_other_texts
 
-    targets = ['Lucy', 'Bill']
+    targets = TARGETS
     classifier = TextClassifier(training_data, targets, target_indices)
-    #classifier.train('svm')
-    #classifier.predict(test_data, test_target_indices)
+    classifier.train('svm')
+    classifier.predict(test_data, test_target_indices)
 
     print('----------------------')
-    classifier.train_nltk()
-    classifier.test_nltk(test_data)
+    # classifier.train_nltk()
+    # classifier.test_nltk(test_data)
