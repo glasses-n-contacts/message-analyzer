@@ -24,8 +24,8 @@ class MessageAnalyzer:
         ps = PorterStemmer()
         if extend_list:
             for message in self.text:
-                # all_tokens.extend(message.split())
-                all_tokens.extend(nltk.word_tokenize(message.translate(string.punctuation)))
+                all_tokens.extend(message.split())
+                # all_tokens.extend(nltk.word_tokenize(message.translate(string.punctuation)))
             all_tokens = [ps.stem(w) for w in all_tokens if w not in stop_words]  # and w.isalpha()]
         else:
             all_tokens = [nltk.word_tokenize(message.translate(string.punctuation)) for message in self.text]
@@ -51,10 +51,10 @@ class MessageAnalyzer:
 
     @staticmethod
     def clean_message(message):
-        '''
+        """
         Utility function to clean text by removing links, special characters
         using simple regex statements.
-        '''
+        """
         return ' '.join(re.sub("(@[A-Za-z0-9]+)|([^0-9A-Za-z \t])| (\w +:\ / \ / \S +)", " ", message).split())
 
     def sentiment_analysis(self):
@@ -64,18 +64,15 @@ class MessageAnalyzer:
             polarities[message] = analysis.sentiment.polarity
             self.avg_polarity += analysis.sentiment.polarity
 
-        self.avg_polarity = self.avg_polarity/len(self.text)
+        self.avg_polarity /= len(self.text)
         for message in polarities:
             print(polarities[message], message)
         return polarities
 
-
-
-
 if __name__ == '__main__':
     scraper = MessageScraper(ABSOLUTE_PATH, CONTACT_INFO, NAME)
     my_texts, other_texts = scraper.all_messages()
-    analyzer = MessageAnalyzer(my_texts)
+    analyzer = MessageAnalyzer(other_texts)
     # analyzer.tokenize()
     # freqs = analyzer.word_frequencies()
     # for word, frequency in freqs.most_common(50):

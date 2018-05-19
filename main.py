@@ -8,8 +8,9 @@ if __name__ == '__main__':
     scraper = MessageScraper(ABSOLUTE_PATH, CONTACT_INFO, NAME)
     my_texts, other_texts = scraper.all_messages()
 
-    slice_my_index = int(len(my_texts) * 0.9)
-    slice_other_index = int(len(other_texts) * 0.9)
+    train_percent = 0.6
+    slice_my_index = int(len(my_texts) * train_percent)
+    slice_other_index = int(len(other_texts) * train_percent)
 
     train_my_texts = my_texts[:slice_my_index]
     train_other_texts = other_texts[:slice_other_index]
@@ -25,9 +26,9 @@ if __name__ == '__main__':
 
     targets = TARGETS
     classifier = TextClassifier(training_data, targets, target_indices)
-    classifier.train('svm')
-    classifier.predict(test_data, test_target_indices)
+    #classifier.train('svm')
+    #classifier.predict(test_data, test_target_indices)
 
     print('----------------------')
-    # classifier.train_nltk()
-    # classifier.test_nltk(test_data)
+    classifier.train_nltk()
+    classifier.test_nltk(test_data)

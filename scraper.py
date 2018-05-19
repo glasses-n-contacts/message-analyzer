@@ -92,7 +92,6 @@ class MessageScraper:
                 else:
                     return_data[messager_name].append(message)
 
-
             # Returns a dictionary, with the keys being the user names,
             # and the values being arrays of messages that the user sent
             return return_data
@@ -107,7 +106,6 @@ class MessageScraper:
             if self.my_name != name:
                 other_name = name
         other_messages = messenger_texts[other_name]
-
         my_texts, other_texts = self.get_texts()
         my_messages.extend(my_texts)
         other_messages.extend(other_texts)
