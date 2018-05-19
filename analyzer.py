@@ -24,8 +24,8 @@ class MessageAnalyzer:
         ps = PorterStemmer()
         if extend_list:
             for message in self.text:
-                all_tokens.extend(message.split())
-                # all_tokens.extend(nltk.word_tokenize(message.translate(string.punctuation)))
+                # all_tokens.extend(message.split())
+                all_tokens.extend(nltk.word_tokenize(message.translate(string.punctuation)))
             all_tokens = [ps.stem(w) for w in all_tokens if w not in stop_words]  # and w.isalpha()]
         else:
             all_tokens = [nltk.word_tokenize(message.translate(string.punctuation)) for message in self.text]

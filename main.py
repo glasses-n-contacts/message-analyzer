@@ -8,7 +8,7 @@ if __name__ == '__main__':
     scraper = MessageScraper(ABSOLUTE_PATH, CONTACT_INFO, NAME)
     my_texts, other_texts = scraper.all_messages()
 
-    train_percent = 0.6
+    train_percent = 0.8
     slice_my_index = int(len(my_texts) * train_percent)
     slice_other_index = int(len(other_texts) * train_percent)
 
