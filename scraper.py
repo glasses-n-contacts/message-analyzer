@@ -2,6 +2,7 @@ import sqlite3
 import os
 from variables import *
 from bs4 import BeautifulSoup
+import pandas as pd
 
 
 class MessageScraper:
@@ -58,12 +59,23 @@ class MessageScraper:
 
     @staticmethod
     def get_messenger_messages():
+        return_data = {}
         directory = "data/BillLucyMessenger.html"
+        file = open("data/messenger_data.txt", "r+")
         if not os.path.exists(directory):
             print("This file does not exist")
             return
+        content = file.readlines()
+        if len(content) > 1:
+            print('Use cached file')
+            for name, message in zip(content[0::2], content[1::2]):
+                if name.strip('\n') not in return_data:
+                    return_data[name.strip('\n')] = [message.strip('\n')]
+                else:
+                    return_data[name.strip('\n')].append(message.strip('\n'))
+            return return_data
+
         with open(directory, encoding="utf-8") as f:
-            return_data = {}
             data = f.read()
             soup = BeautifulSoup(data, "html.parser")
             divs = soup.find_all("div", {"class": "_41ud"})
@@ -72,10 +84,14 @@ class MessageScraper:
                 messager_name = messager_div.text
                 message_div = div.find("div", {"class": "clearfix"})
                 message = message_div.text
+
+                file.write(messager_name + '\n')
+                file.write(message + '\n')
                 if messager_name not in return_data:
-                    return_data[messager_name] = []
+                    return_data[messager_name] = [message]
                 else:
                     return_data[messager_name].append(message)
+
 
             # Returns a dictionary, with the keys being the user names,
             # and the values being arrays of messages that the user sent
