@@ -98,5 +98,6 @@ if __name__ == '__main__':
 
     entities = analyzer.recognize_entities()
     print(entities)
-    # for e in entities:
-    #     e.draw()
+    for e in entities:
+        print(e)
+        # e.draw()
