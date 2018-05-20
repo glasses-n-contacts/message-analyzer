@@ -1,3 +1,4 @@
+import random
 from scraper import MessageScraper
 from analyzer import MessageAnalyzer
 from classifier import TextClassifier
@@ -7,6 +8,10 @@ from variables import *
 if __name__ == '__main__':
     scraper = MessageScraper(ABSOLUTE_PATH, CONTACT_INFO, NAME)
     my_texts, other_texts = scraper.all_messages()
+
+    # randomize
+    random.shuffle(my_texts)
+    random.shuffle(other_texts)
 
     train_percent = 0.8
     slice_my_index = int(len(my_texts) * train_percent)
