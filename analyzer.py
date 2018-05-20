@@ -71,13 +71,18 @@ class MessageAnalyzer:
         return polarities
 
     def recognize_entities(self):
+        """
+        The grammar says that an NP chunk should be formed whenever the chunker finds an optional determiner (DT)
+        followed by any number of adjectives (JJ) and then a noun (NN).
+        @return an array of recognized entities.
+        """
         grammar = "NP: {<DT>?<JJ>*<NN>}"
         cp = nltk.RegexpParser(grammar)
         token_set = self.word_tokenize()
         token_set = [nltk.pos_tag(tokens) for tokens in token_set]
-        print(token_set)
-        entities = [cp.parse(tokens) for tokens in token_set]
-        return entities
+        # print(token_set)
+        named_entities = [cp.parse(tokens) for tokens in token_set]
+        return named_entities
 
 if __name__ == '__main__':
     scraper = MessageScraper(ABSOLUTE_PATH, CONTACT_INFO, NAME)
@@ -93,4 +98,5 @@ if __name__ == '__main__':
 
     entities = analyzer.recognize_entities()
     print(entities)
-    # entities[0].draw()
+    # for e in entities:
+    #     e.draw()
