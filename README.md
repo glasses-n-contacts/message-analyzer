@@ -11,6 +11,8 @@ CONTACT_INFO = <phone number or apple id, whichever is used in imessage, of the 
 ABSOLUTE_PATH = <absolute path to sqlite db, corresponds to ~/Library/Messages/chat.db>
 NAME = <Your first name used in fb messenger>
 TARGETS = <An array of the names of the users, ie. ['Lucy','Bill']
+MONGODB_URI = <MONGO URI of mongodb instance where we're going to store the messages for safekeeping>
+CLIENT_MONGODB = <MONGO client>
 ```
 
 2. Save the html page source file of a fb messenger conversation in a `data` directory created at the root of the project. See `MessageScraper` for more info.
