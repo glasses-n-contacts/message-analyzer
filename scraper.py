@@ -2,7 +2,8 @@ import sqlite3
 import os
 from variables import *
 from bs4 import BeautifulSoup
-import pandas as pd
+import datetime
+import server
 
 
 class MessageScraper:
@@ -18,9 +19,10 @@ class MessageScraper:
         self.contact_info = contact_info
         self.path_to_db = path_to_db
         self.my_name = my_name
+        self.database = server.get_db()
 
     # contact_info: phone number (ie. +19999999999) or apple id
-    def get_texts(self, write_to_file=True):
+    def get_texts(self, write_to_file=True, just_get_message=True):
         con = sqlite3.connect(self.path_to_db)
         results = con.execute(
             "select is_from_me,text," +
@@ -41,7 +43,7 @@ class MessageScraper:
         my_texts = []
         other_texts = []
         for result in results:
-            print(result)
+            # print(result)
             # Your index is 1, the other person's index is 0
             sender_index, message, date_delivered = result
             if (message is None or message.startswith('Laughed at') or message.startswith('Liked “') or
@@ -49,14 +51,20 @@ class MessageScraper:
                 message.startswith('Emphasized “') or message.startswith('Laughed at ') or
                     len(message) == 0):
                 continue
+
+            # print(type(date_delivered))
+            if date_delivered != '2000-12-31 18:00:00':
+                message_to_text = message + '; ' + date_delivered + '\n'
+                if not just_get_message:
+                    message = {'message': message, 'date_delivered': date_delivered}
             if sender_index is 0:
                 if write_to_file:
                     # do something with others' texts
-                    f0.write(message)
+                    f0.write(message_to_text)
                 other_texts.append(message)
             else:  # do something with your own texts
                 if write_to_file:
-                    f1.write(message)
+                    f1.write(message_to_text)
                 my_texts.append(message)
         return my_texts, other_texts
 
@@ -99,7 +107,7 @@ class MessageScraper:
             # and the values being arrays of messages that the user sent
             return return_data
 
-    def all_messages(self):
+    def all_messages(self, write_to_db=True):
         messenger_texts = self.get_messenger_messages()
         my_messages = messenger_texts[self.my_name]
 
@@ -112,6 +120,12 @@ class MessageScraper:
         my_texts, other_texts = self.get_texts()
         my_messages.extend(my_texts)
         other_messages.extend(other_texts)
+
+        if write_to_db:
+            self.database.messages.insert_one({"messager": self.my_name, "messages": my_messages,
+                                               "date": datetime.datetime.utcnow()})
+            self.database.messages.insert_one({"messager": other_name, "messages": other_messages,
+                                               "date": datetime.datetime.utcnow()})
 
         return my_messages, other_messages
 

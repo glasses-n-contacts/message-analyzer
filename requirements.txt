@@ -5,3 +5,4 @@ numpy
 textblob
 flask
 wordcloud
+pymongo
