@@ -3,3 +3,4 @@ sklearn
 bs4
 numpy
 textblob
+flask

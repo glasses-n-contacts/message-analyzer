@@ -57,7 +57,7 @@ class MessageAnalyzer:
         """
         return ' '.join(re.sub("(@[A-Za-z0-9]+)|([^0-9A-Za-z \t])| (\w +:\ / \ / \S +)", " ", message).split())
 
-    def sentiment_analysis(self):
+    def sentiment_analysis(self, debug=False):
         polarities = {}
         for message in self.text:
             analysis = TextBlob(self.clean_message(message))
@@ -65,9 +65,19 @@ class MessageAnalyzer:
             self.avg_polarity += analysis.sentiment.polarity
 
         self.avg_polarity /= len(self.text)
-        for message in polarities:
-            print(polarities[message], message)
+        if debug:
+            for message in polarities:
+                print(polarities[message], message)
         return polarities
+
+    def recognize_entities(self):
+        grammar = "NP: {<DT>?<JJ>*<NN>}"
+        cp = nltk.RegexpParser(grammar)
+        token_set = self.word_tokenize()
+        token_set = [nltk.pos_tag(tokens) for tokens in token_set]
+        print(token_set)
+        entities = [cp.parse(tokens) for tokens in token_set]
+        return entities
 
 if __name__ == '__main__':
     scraper = MessageScraper(ABSOLUTE_PATH, CONTACT_INFO, NAME)
@@ -77,6 +87,10 @@ if __name__ == '__main__':
     # freqs = analyzer.word_frequencies()
     # for word, frequency in freqs.most_common(50):
     #     print(u'{}: {}'.format(word, frequency))
-    analyzer.sentiment_analysis()
-    print('Avg polarity')
-    print(analyzer.avg_polarity)
+    # analyzer.sentiment_analysis()
+    # print('Avg polarity')
+    # print(analyzer.avg_polarity)
+
+    entities = analyzer.recognize_entities()
+    print(entities)
+    # entities[0].draw()
