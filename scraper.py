@@ -22,10 +22,12 @@ class MessageScraper:
     # contact_info: phone number (ie. +19999999999) or apple id
     def get_texts(self, write_to_file=True):
         con = sqlite3.connect(self.path_to_db)
-        results = con.execute("select is_from_me,text from message where handle_id=(" +
-                              "select handle_id from chat_handle_join where chat_id=(" +
-                              "select ROWID from chat where guid='iMessage;-;" + self.contact_info + "')" +
-                              ")")
+        results = con.execute(
+            "select is_from_me,text," +
+            "datetime(date_delivered/1000000000 + strftime(\"%s\", \"2001-01-01\") ,\"unixepoch\",\"localtime\") "+
+            "from message where handle_id=(" +
+            "select handle_id from chat_handle_join where chat_id=(" +
+            "select ROWID from chat where guid='iMessage;-;" + self.contact_info + "'))")
 
         if write_to_file:
             directory = "data/"
@@ -39,8 +41,9 @@ class MessageScraper:
         my_texts = []
         other_texts = []
         for result in results:
+            print(result)
             # Your index is 1, the other person's index is 0
-            sender_index, message = result
+            sender_index, message, date_delivered = result
             if (message is None or message.startswith('Laughed at') or message.startswith('Liked “') or
                 message.startswith('Loved “') or message.startswith('Disliked “') or
                 message.startswith('Emphasized “') or message.startswith('Laughed at ') or
@@ -117,5 +120,5 @@ if __name__ == '__main__':
     scraper = MessageScraper(ABSOLUTE_PATH, CONTACT_INFO, NAME)
     # scraper.get_texts()
     my_texts, other_texts = scraper.all_messages()
-    print(my_texts)
-    print(other_texts)
+    # print(my_texts)
+    # print(other_texts)
