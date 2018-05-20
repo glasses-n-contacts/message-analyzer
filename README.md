@@ -21,9 +21,11 @@ TARGETS = <An array of the names of the users, ie. ['Lucy','Bill']
 
 1. MessageScraper:
 * Gets all iMessage interactions with any other user specified by their phone number or apple id
-* Parses page source of fb messenger messages to get interactions with another user.
+* Scrapes page source of fb messenger messages using bs4 to get interactions with another user.
 To get this page source, go to messenger.com, scroll all the way to the beginning of the conversation with the user of
 interest, and click "save as" to save it as an html file. Save it in a data/ directory at the root of the project.
+* I recommend using http://sqlitebrowser.org for examining the sqlite database (~/Library/Messages/chat.db) which is what
+the scraper reads from to get iMessage data.
 
 2. MessageAnalyzer
 * Analyzes the actual text
