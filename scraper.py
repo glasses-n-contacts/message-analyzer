@@ -77,8 +77,10 @@ class MessageScraper:
             print("This file does not exist")
             return
 
-        open("data/messenger_data0.txt", "w+")
-        open("data/messenger_data1.txt", "w+")
+        if not os.path.exists("data/messenger_data0.txt"):
+            open("data/messenger_data0.txt", "w+")
+        if not os.path.exists("data/messenger_data1.txt"):
+            open("data/messenger_data1.txt", "w+")
 
         file0 = open("data/messenger_data0.txt", "r+")  # The other user's messages
         file1 = open("data/messenger_data1.txt", "r+")  # My messages
