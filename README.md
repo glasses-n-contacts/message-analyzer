@@ -10,6 +10,7 @@ Uses Python 3.6.5.
 CONTACT_INFO = <phone number or apple id, whichever is used in imessage, of the recipient of your messages>
 ABSOLUTE_PATH = <absolute path to sqlite db, corresponds to ~/Library/Messages/chat.db>
 NAME = <Your first name used in fb messenger>
+TARGETS = <An array of the names of the users, ie. ['Lucy','Bill']
 ```
 
 2. Save the html page source file of a fb messenger conversation in a `data` directory created at the root of the project. See `MessageScraper` for more info.
