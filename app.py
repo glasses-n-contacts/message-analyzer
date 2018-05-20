@@ -14,7 +14,7 @@ def home():
     return render_template('index.html')
 
 
-@app.route("/all_texts", methods = ["GET"])
+@app.route("/all_texts", methods=["GET"])
 def all_texts():
     my_texts, other_texts = scraper.all_messages()
     return jsonify(my_texts + other_texts)

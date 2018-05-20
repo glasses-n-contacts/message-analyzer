@@ -57,6 +57,8 @@ class MessageScraper:
                 message_to_text = message + '; ' + date_delivered + '\n'
                 if not just_get_message:
                     message = {'message': message, 'date_delivered': date_delivered}
+            else:
+                message_to_text = message
             if sender_index is 0:
                 if write_to_file:
                     # do something with others' texts
