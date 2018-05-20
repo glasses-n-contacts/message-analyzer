@@ -70,22 +70,36 @@ class MessageScraper:
                 my_texts.append(message)
         return my_texts, other_texts
 
-    @staticmethod
-    def get_messenger_messages():
+    def get_messenger_messages(self, use_cached_file=True):
         return_data = {}
         directory = "data/BillLucyMessenger.html"
-        file = open("data/messenger_data.txt", "r+")
         if not os.path.exists(directory):
             print("This file does not exist")
             return
-        content = file.readlines()
-        if len(content) > 1:
+
+        open("data/messenger_data0.txt", "w+")
+        open("data/messenger_data1.txt", "w+")
+
+        file0 = open("data/messenger_data0.txt", "r+")  # The other user's messages
+        file1 = open("data/messenger_data1.txt", "r+")  # My messages
+
+        content0 = file0.readlines()
+        content1 = file1.readlines()
+
+        other_name = TARGETS[1]
+        if len(content0) > 1 and len(content1) > 1 and use_cached_file:
             print('Use cached file')
-            for name, message in zip(content[0::2], content[1::2]):
-                if name.strip('\n') not in return_data:
-                    return_data[name.strip('\n')] = [message.strip('\n')]
+            for message in content0:
+                if self.my_name not in return_data:
+                    return_data[self.my_name] = [message.strip('\n')]
                 else:
-                    return_data[name.strip('\n')].append(message.strip('\n'))
+                    return_data[self.my_name].append(message.strip('\n'))
+            for message in content1:
+                if other_name not in return_data:
+                    return_data[other_name] = [message.strip('\n')]
+                else:
+                    return_data[other_name].append(message.strip('\n'))
+
             return return_data
 
         with open(directory, encoding="utf-8") as f:
@@ -94,12 +108,15 @@ class MessageScraper:
             divs = soup.find_all("div", {"class": "_41ud"})
             for div in divs:
                 messager_div = div.find("h5")
-                messager_name = messager_div.text
+                messager_name = messager_div.text.strip('\n')
                 message_div = div.find("div", {"class": "clearfix"})
                 message = message_div.text
 
-                file.write(messager_name + '\n')
-                file.write(message + '\n')
+                if other_name in messager_name:
+                    file0.write(message + '\n')
+                elif self.my_name in messager_name:
+                    file1.write(message + '\n')
+
                 if messager_name not in return_data:
                     return_data[messager_name] = [message]
                 else:
@@ -114,10 +131,12 @@ class MessageScraper:
         my_messages = messenger_texts[self.my_name]
 
         names = messenger_texts.keys()
+        print(names)
         other_name = ""
         for name in names:
             if self.my_name != name:
                 other_name = name
+                print(other_name)
         other_messages = messenger_texts[other_name]
         my_texts, other_texts = self.get_texts()
         my_messages.extend(my_texts)
