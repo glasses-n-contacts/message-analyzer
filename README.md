@@ -31,7 +31,10 @@ the scraper reads from to get iMessage data.
 
 2. MessageAnalyzer
 * Analyzes the actual text
+* Word clouds
+* Entity recognition
 
 3. TextClassifier
 * Classification of text. Currently used to determine if a text is from Lucy or Bill.
 * Current options: Naive bayes, logistic regression, svm.
+
