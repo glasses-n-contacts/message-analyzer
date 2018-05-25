@@ -38,3 +38,6 @@ the scraper reads from to get iMessage data.
 * Classification of text. Currently used to determine if a text is from Lucy or Bill.
 * Current options: Naive bayes, logistic regression, svm.
 
+## Server
+Run `python app.py` to start the server which contains API calls to analyze text
+and soon will have more interesting analysis visualizations. 
