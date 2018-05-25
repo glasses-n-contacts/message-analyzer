@@ -37,14 +37,16 @@ class MessageAnalyzer:
         tokens = self.word_tokenize(True)
         return nltk.FreqDist(tokens)
 
-    def word_cloud(self):
+    def word_cloud(self, show_plot=True):
         word_cloud_obj = WordCloud()
         freq_dict = word_cloud_obj.process_text(' '.join(self.text))
-        word_cloud = word_cloud_obj.generate_from_frequencies(freq_dict)
-        plt.figure()
-        plt.imshow(word_cloud, interpolation='bilinear')
-        plt.axis("off")
-        plt.show()
+        if show_plot:
+            word_cloud = word_cloud_obj.generate_from_frequencies(freq_dict)
+            plt.figure()
+            plt.imshow(word_cloud, interpolation='bilinear')
+            plt.axis("off")
+            plt.show()
+        return freq_dict
 
     def tokenize(self):
         # create the transform
@@ -97,7 +99,7 @@ class MessageAnalyzer:
 
 if __name__ == '__main__':
     scraper = MessageScraper(ABSOLUTE_PATH, CONTACT_INFO, NAME)
-    my_texts, other_texts = scraper.all_messages()
+    my_texts, other_texts = scraper.all_messages(write_to_db=False)
     analyzer = MessageAnalyzer(my_texts)
     # analyzer.tokenize()
     # freqs = analyzer.word_frequencies()
@@ -107,10 +109,11 @@ if __name__ == '__main__':
     # print('Avg polarity')
     # print(analyzer.avg_polarity)
 
-    analyzer.word_cloud()
+    freqs = analyzer.word_cloud(False)
+    print(freqs)
 
-    entities = analyzer.recognize_entities()
-    print(entities)
-    for e in entities:
-        print(e)
+    # entities = analyzer.recognize_entities()
+    # print(entities)
+    # for e in entities:
+    #     print(e)
         # e.draw()

@@ -20,9 +20,14 @@ def all_texts():
     return jsonify(my_texts + other_texts)
 
 
-@app.route("/data")
-def get_data():
-    my_texts, other_texts = scraper.all_messages()
+@app.route("/frequencies", methods=["GET"])
+def get_frequencies():
+    my_texts, other_texts = scraper.all_messages(write_to_db=False)
+    my_analyzer = MessageAnalyzer(my_texts)
+    other_analyzer = MessageAnalyzer(other_texts)
+    my_freqs = my_analyzer.word_cloud(False)
+    other_freqs = other_analyzer.word_cloud(False)
+    return jsonify({TARGETS[0]: my_freqs, TARGETS[1]:other_freqs})
 
 
 if __name__ == "__main__":
