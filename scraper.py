@@ -2,6 +2,8 @@ import sqlite3
 import os
 from variables import *
 from bs4 import BeautifulSoup
+import pyautogui
+import webbrowser
 import datetime
 import server
 
@@ -69,6 +71,17 @@ class MessageScraper:
                     f1.write(message_to_text)
                 my_texts.append(message)
         return my_texts, other_texts
+
+    @staticmethod
+    def get_fb_messenger_source(fb_username):
+        # Move to the center of the screen
+        width, height = pyautogui.size()
+        pyautogui.moveTo(width/2, height/2)
+        # Open the website
+        webbrowser.open("https://www.messenger.com/t/" + fb_username)
+        while True:
+            pyautogui.scroll(200)
+        return
 
     def get_messenger_messages(self, use_cached_file=True):
         return_data = {}
@@ -155,7 +168,8 @@ class MessageScraper:
 
 if __name__ == '__main__':
     scraper = MessageScraper(ABSOLUTE_PATH, CONTACT_INFO, NAME)
+    MessageScraper.get_fb_messenger_source(MESSENGER_USERNAME)
     # scraper.get_texts()
-    my_texts, other_texts = scraper.all_messages()
+    # my_texts, other_texts = scraper.all_messages()
     # print(my_texts)
     # print(other_texts)

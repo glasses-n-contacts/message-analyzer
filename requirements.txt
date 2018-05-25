@@ -6,3 +6,7 @@ textblob
 flask
 wordcloud
 pymongo
+pyobjc-framework-Quartz
+pyobjc-core
+pyobjc
+pyautogui
