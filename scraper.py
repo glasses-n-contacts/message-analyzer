@@ -4,6 +4,7 @@ from variables import *
 from bs4 import BeautifulSoup
 import pyautogui
 import webbrowser
+import time
 import datetime
 import server
 
@@ -81,6 +82,7 @@ class MessageScraper:
         webbrowser.open("https://www.messenger.com/t/" + fb_username)
         while True:
             pyautogui.scroll(200)
+            time.sleep(2)  # delays for 2 seconds.
         return
 
     def get_messenger_messages(self, use_cached_file=True):
