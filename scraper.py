@@ -7,7 +7,13 @@ import webbrowser
 import time
 import datetime
 import server
+import json
 
+# message: string message
+def isReaction(message):
+    return (message.startswith('Laughed at') or message.startswith('Liked "') or
+        message.startswith('Loved "') or message.startswith('Disliked "') or
+        message.startswith('Emphasized "') or message.startswith('Laughed at '))
 
 class MessageScraper:
 
@@ -25,10 +31,10 @@ class MessageScraper:
         self.database = server.get_db()
 
     # contact_info: phone number (ie. +19999999999) or apple id
-    def get_texts(self, write_to_file=True, just_get_message=True):
+    def get_imessage_texts(self, write_to_file=True, just_get_message=True, include_reaction=False):
         con = sqlite3.connect(self.path_to_db)
         results = con.execute(
-            "select is_from_me,text," +
+            "select is_from_me,text,guid,associated_message_guid," +
             "datetime(date_delivered/1000000000 + strftime(\"%s\", \"2001-01-01\") ,\"unixepoch\",\"localtime\") "+
             "from message where handle_id=(" +
             "select handle_id from chat_handle_join where chat_id=(" +
@@ -42,26 +48,41 @@ class MessageScraper:
             # Write everything to file
             f0 = open(directory + "message_data0.txt", "w+")
             f1 = open(directory + "message_data1.txt", "w+")
+            json0 = open(directory + "message_detailed0.json", "w+")
+            json1 = open(directory + "message_detailed1.json", "w+")
 
         my_texts = []
         other_texts = []
         for result in results:
-            # print(result)
             # Your index is 1, the other person's index is 0
-            sender_index, message, date_delivered = result
-            if (message is None or message.startswith('Laughed at') or message.startswith('Liked “') or
-                message.startswith('Loved “') or message.startswith('Disliked “') or
-                message.startswith('Emphasized “') or message.startswith('Laughed at ') or
-                    len(message) == 0):
+            sender_index, message, guid, associated_message_guid, date_delivered = result
+            if (message is None or len(message) == 0):
                 continue
 
-            # print(type(date_delivered))
             if date_delivered != '2000-12-31 18:00:00':
                 message_to_text = message + '; ' + date_delivered + '\n'
-                if not just_get_message:
-                    message = {'message': message, 'date_delivered': date_delivered}
             else:
                 message_to_text = message
+
+            if (isReaction(message)):
+                if not include_reaction:
+                    continue
+                if not just_get_message:
+                    message = {
+                        'message': message,
+                        'date_delivered': date_delivered,
+                        'reaction': 1,
+                        'associated_message_guid': associated_message_guid
+                    }
+            else:
+                if not just_get_message:
+                    message = {
+                        'message': message,
+                        'date_delivered': date_delivered,
+                        'guid': guid,
+                        'reaction': 0,
+                    }
+    
             if sender_index is 0:
                 if write_to_file:
                     # do something with others' texts
@@ -71,6 +92,10 @@ class MessageScraper:
                 if write_to_file:
                     f1.write(message_to_text)
                 my_texts.append(message)
+        
+        if write_to_file:
+            json.dump(my_texts, json0)
+            json.dump(other_texts, json1)
         return my_texts, other_texts
 
     @staticmethod
@@ -148,14 +173,12 @@ class MessageScraper:
         my_messages = messenger_texts[self.my_name]
 
         names = messenger_texts.keys()
-        print(names)
         other_name = ""
         for name in names:
             if self.my_name != name:
                 other_name = name
-                print(other_name)
         other_messages = messenger_texts[other_name]
-        my_texts, other_texts = self.get_texts()
+        my_texts, other_texts = self.get_imessage_texts()
         my_messages.extend(my_texts)
         other_messages.extend(other_texts)
 
@@ -170,8 +193,9 @@ class MessageScraper:
 
 if __name__ == '__main__':
     scraper = MessageScraper(ABSOLUTE_PATH, CONTACT_INFO, NAME)
-    MessageScraper.get_fb_messenger_source(MESSENGER_USERNAME)
-    # scraper.get_texts()
+    # MessageScraper.get_fb_messenger_source(MESSENGER_USERNAME)
+    my_texts, other_texts = scraper.get_imessage_texts(
+        write_to_file=True, just_get_message=False, include_reaction=True)
     # my_texts, other_texts = scraper.all_messages()
     # print(my_texts)
     # print(other_texts)

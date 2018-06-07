@@ -19,6 +19,15 @@ def all_texts():
     my_texts, other_texts = scraper.all_messages()
     return jsonify(my_texts + other_texts)
 
+@app.route("/imessages", methods=["GET"])
+def imessages():
+    my_texts, other_texts = scraper.get_imessage_texts(
+        write_to_file=False, just_get_message=False, include_reaction=True)
+    for my_message in my_texts:
+        my_message['messager'] = 0
+    for other_message in other_texts:
+        other_message['messager'] = 1
+    return jsonify(my_texts + other_texts)
 
 @app.route("/frequencies", methods=["GET"])
 def get_frequencies():

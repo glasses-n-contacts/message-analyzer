@@ -100,7 +100,7 @@ class MessageAnalyzer:
 if __name__ == '__main__':
     scraper = MessageScraper(ABSOLUTE_PATH, CONTACT_INFO, NAME)
     my_texts, other_texts = scraper.all_messages(write_to_db=False)
-    analyzer = MessageAnalyzer(my_texts)
+    analyzer = MessageAnalyzer(other_texts)
     # analyzer.tokenize()
     # freqs = analyzer.word_frequencies()
     # for word, frequency in freqs.most_common(50):
@@ -109,7 +109,7 @@ if __name__ == '__main__':
     # print('Avg polarity')
     # print(analyzer.avg_polarity)
 
-    freqs = analyzer.word_cloud(False)
+    freqs = analyzer.word_cloud(True)
     print(freqs)
 
     # entities = analyzer.recognize_entities()
