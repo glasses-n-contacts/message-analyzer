@@ -3,8 +3,10 @@ from flask import Flask, render_template, send_from_directory, jsonify, request,
 from analyzer import MessageAnalyzer
 from scraper import MessageScraper
 from variables import *
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 scraper = MessageScraper(ABSOLUTE_PATH, CONTACT_INFO, NAME)
 
@@ -24,6 +26,10 @@ def imessages():
     _, _, all_texts = scraper.get_imessage_texts(
         write_to_file=False, just_get_message=False, include_reaction=True)
     return jsonify(all_texts)
+
+@app.route('/attachments/<path:path>')
+def send_attachment(path):
+    return send_from_directory('data/attachments', path)
 
 @app.route("/frequencies", methods=["GET"])
 def get_frequencies():
