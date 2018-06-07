@@ -48,11 +48,13 @@ class MessageScraper:
             # Write everything to file
             f0 = open(directory + "message_data0.txt", "w+")
             f1 = open(directory + "message_data1.txt", "w+")
-            json0 = open(directory + "message_detailed0.json", "w+")
-            json1 = open(directory + "message_detailed1.json", "w+")
+            json0 = open(directory + "imessage_detailed0.json", "w+")
+            json1 = open(directory + "imessage_detailed1.json", "w+")
+            jsonall = open(directory + "imessage_detailed_all.json", "w+")
 
         my_texts = []
         other_texts = []
+        allMessages = []
         for result in results:
             # Your index is 1, the other person's index is 0
             sender_index, message, guid, associated_message_guid, date_delivered = result
@@ -72,7 +74,8 @@ class MessageScraper:
                         'message': message,
                         'date_delivered': date_delivered,
                         'reaction': 1,
-                        'associated_message_guid': associated_message_guid
+                        'associated_message_guid': associated_message_guid,
+                        'messager': sender_index
                     }
             else:
                 if not just_get_message:
@@ -81,6 +84,7 @@ class MessageScraper:
                         'date_delivered': date_delivered,
                         'guid': guid,
                         'reaction': 0,
+                        'messager': sender_index
                     }
     
             if sender_index is 0:
@@ -92,11 +96,13 @@ class MessageScraper:
                 if write_to_file:
                     f1.write(message_to_text)
                 my_texts.append(message)
+            allMessages.append(message)
         
         if write_to_file:
             json.dump(my_texts, json0)
             json.dump(other_texts, json1)
-        return my_texts, other_texts
+            json.dump(allMessages, jsonall)
+        return my_texts, other_texts, allMessages
 
     @staticmethod
     def get_fb_messenger_source(fb_username):
@@ -178,7 +184,7 @@ class MessageScraper:
             if self.my_name != name:
                 other_name = name
         other_messages = messenger_texts[other_name]
-        my_texts, other_texts = self.get_imessage_texts()
+        my_texts, other_texts, _ = self.get_imessage_texts()
         my_messages.extend(my_texts)
         other_messages.extend(other_texts)
 
@@ -194,7 +200,7 @@ class MessageScraper:
 if __name__ == '__main__':
     scraper = MessageScraper(ABSOLUTE_PATH, CONTACT_INFO, NAME)
     # MessageScraper.get_fb_messenger_source(MESSENGER_USERNAME)
-    my_texts, other_texts = scraper.get_imessage_texts(
+    my_texts, other_texts, allMessages = scraper.get_imessage_texts(
         write_to_file=True, just_get_message=False, include_reaction=True)
     # my_texts, other_texts = scraper.all_messages()
     # print(my_texts)
