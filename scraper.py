@@ -10,12 +10,6 @@ import server
 import json
 from shutil import copy
 
-# message: string message
-def isReaction(message):
-    return (message.startswith('Laughed at') or message.startswith('Liked "') or
-        message.startswith('Loved "') or message.startswith('Disliked "') or
-        message.startswith('Emphasized "') or message.startswith('Laughed at '))
-
 class MessageScraper:
 
     """
@@ -74,7 +68,7 @@ class MessageScraper:
             else:
                 message_to_text = message
 
-            if (isReaction(message)):
+            if (associated_message_guid is not None):
                 if not include_reaction:
                     continue
                 if not just_get_message:
