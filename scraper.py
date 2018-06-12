@@ -126,7 +126,7 @@ class MessageScraper:
             time.sleep(2)  # delays for 2 seconds.
         return
 
-    def get_messenger_messages(self, use_cached_file=True):
+    def get_messenger_messages(self, use_cached_file=False):
         return_data = {}
         directory = "data/BillLucyMessenger.html"
         if not os.path.exists(directory):
@@ -212,6 +212,9 @@ if __name__ == '__main__':
     # MessageScraper.get_fb_messenger_source(MESSENGER_USERNAME)
     my_texts, other_texts, allMessages = scraper.get_imessage_texts(
         write_to_file=True, just_get_message=False, include_reaction=True)
+    MessageScraper.get_fb_messenger_source(MESSENGER_USERNAME)
+    scraper.get_messenger_messages(False)
+    # scraper.get_texts()
     # my_texts, other_texts = scraper.all_messages()
     # print(my_texts)
     # print(other_texts)

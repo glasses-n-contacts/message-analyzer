@@ -13,7 +13,7 @@ scraper = MessageScraper(ABSOLUTE_PATH, CONTACT_INFO, NAME)
 @app.route("/")
 @app.route("/home")
 def home():
-    return render_template('index.html')
+    return render_template('home.html')
 
 
 @app.route("/all_texts", methods=["GET"])

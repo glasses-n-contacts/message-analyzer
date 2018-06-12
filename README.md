@@ -80,3 +80,4 @@ Run `python app.py` to start the server which contains API calls to analyze text
     `{url}/attachments/violet.png` points to `data/attachments/violet.png`.
 
 More interesting analysis visualizations to come.
+
