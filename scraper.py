@@ -30,7 +30,7 @@ class MessageScraper:
         con = sqlite3.connect(self.path_to_db)
         results = con.execute(
             "select is_from_me,text,message.guid,associated_message_guid," +
-            "datetime(date_delivered/1000000000 + strftime(\"%s\", \"2001-01-01\") ,\"unixepoch\",\"localtime\")," +
+            "datetime(date/1000000000 + strftime(\"%s\", \"2001-01-01\") ,\"unixepoch\",\"localtime\")," +
             "filename " +
             "from message "
             "left join message_attachment_join on message.ROWID = message_attachment_join.message_id " +
