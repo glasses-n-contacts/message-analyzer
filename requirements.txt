@@ -4,6 +4,7 @@ bs4
 numpy
 textblob
 flask
+flask_cors
 wordcloud
 pymongo
 pyobjc-framework-Quartz
