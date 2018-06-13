@@ -55,9 +55,9 @@ Run `python app.py` to start the server which contains API calls to analyze text
 
 ### Endpoints
 
-- `/imessages`
+- `/all_detailed`
 
-    Returns all iMessages (in order) in a JSON array. Messages are scrapped again each time the API is requested.
+    Returns all messages, iMessage and Messenger in a JSON array.
 
     messasge format:
 
@@ -68,21 +68,27 @@ Run `python app.py` to start the server which contains API calls to analyze text
         is_reaction: 1 for reaction, 0 for other,
         associated_message_guid: (only for reactions) the message guid associated with the reaction,
         is_from_me: 1 for 'me', 0 for the other,
-        attachment: (only for messages with attachment) filename of the attachment,
+        attachments: [{
+            filename: filename of the attachment, might be empty,
+            url: url of the attachment, could be either localhost or remote(messenger),
+        }],
         guid: (only for non-reactions) guid of the message,
-        reactions: for messenger, reactions are already attached to messages,
+        reactions: [{
+            is_from_me: 1 for 'me', 0 for the other,
+            has_emoji: 1 if the message doesn't need to be mapped to an emoji,
+            emoji: the reaction emoji, the field only exists if has_emoji == 1,
+        }],
         is_system_message: if the message is a messenger system message,
     }
     ```
 
-    reaction format:
-    ```
-    {
-        is_from_me: 1 for 'me', 0 for the other,
-        has_emoji: 1 if the message doesn't need to be mapped to an emoji,
-        emoji: the reaction emoji, the field only exists if has_emoji == 1,
-    }
-    ```
+- `/imessages`
+
+    format same as above, but only return iMessages.
+
+- `/messenger`
+
+    format same as above, but only returns Messenger messages.
 
 - `/attachments/<path:path>`
 
