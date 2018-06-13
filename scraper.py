@@ -201,7 +201,7 @@ class MessageScraper:
                 for rawReaction in rawReactions:
                     reaction = {
                         'messager': rawReaction['user']['id'] == MESSENGER_ID,
-                        'hasEmoji': True,
+                        'has_emoji': True,
                         'emoji': rawReaction['reaction']
                     }
                     reactions.append(reaction)
@@ -218,7 +218,7 @@ class MessageScraper:
 
                 if not message['message'] and raw['extensible_attachment']:
                     story_attachment = raw['extensible_attachment']['story_attachment']
-                    message['system_message'] = 1
+                    message['is_system_message'] = 1
                     if story_attachment['media']:
                         message['attachment'] = story_attachment['media']['image']['uri']
                     message['message'] = story_attachment['title_with_entities']['text']

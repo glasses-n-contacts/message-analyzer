@@ -15,6 +15,7 @@ Uses Python 3.6.5.
     TARGETS = <An array of the names of the users, ie. ['Lucy','Bill']
     MONGODB_URI = <MONGO URI of mongodb instance where we're going to store the messages for safekeeping>
     CLIENT_MONGODB = <MONGO client>
+    MESSENGER_ID = <Your messenger id, as shown in the data packets -_->
     ```
 
 2. Save the html page source file of a fb messenger conversation in a `data` directory created at the root of the project. See `MessageScraper` for more info.
@@ -69,8 +70,20 @@ Run `python app.py` to start the server which contains API calls to analyze text
         messager: 1 for 'me', 0 for the other,
         attachment: (only for messages with attachment) filename of the attachment,
         guid: (only for non-reactions) guid of the message,
+        reactions: for messenger, reactions are already attached to messages,
+        is_system_message: if the message is a messenger system message,
     }
     ```
+
+    reaction format:
+    ```
+    {
+        messager: 1 for 'me', 0 for the other,
+        has_emoji: 1 if the message doesn't need to be mapped to an emoji,
+        emoji: the reaction emoji, the field only exists if has_emoji == 1,
+    }
+    ```
+
 - `/attachments/<path:path>`
 
     Serves attachments by looking for the `path` file in `data/attachments`. `path` should be the filename rather than the complete path (should've been renamed -_-).
