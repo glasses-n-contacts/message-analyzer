@@ -1,0 +1,6 @@
+[submodule "private-messages-frontend"]
+	path = private-messages-frontend
+	url = git@github.com:glasses-n-contacts/private-messages-frontend.git
+[submodule "messenger-scraper"]
+	path = messenger-scraper
+	url = git@github.com:glasses-n-contacts/messenger-scraper.git
