@@ -2,6 +2,13 @@
 
 Analyzing our text/fb messenger messages
 
+## Submodules:
+
+[Git Submodule Documentation](https://git-scm.com/book/en/v2/Git-Tools-Submodules)
+
+- [Vue Frontend](https://github.com/glasses-n-contacts/private-messages-frontend)
+- [Messenger Scraper](https://github.com/glasses-n-contacts/messenger-scraper)
+
 ## Setup
 
 Uses Python 3.6.5.
