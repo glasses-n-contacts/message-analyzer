@@ -27,6 +27,15 @@ def imessages():
         write_to_file=False, just_get_message=False, include_reaction=True)
     return jsonify(all_texts)
 
+@app.route("/messenger", methods=["GET"])
+def messenger():
+    all_messenger = scraper.all_messenger_from_json()
+    return jsonify(all_messenger)
+
+@app.route("/all_detailed", methods=["GET"])
+def all_detailed():
+    return jsonify(scraper.all_for_frontend())
+
 @app.route('/attachments/<path:path>')
 def send_attachment(path):
     return send_from_directory('data/attachments', path)
