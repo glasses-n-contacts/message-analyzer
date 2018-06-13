@@ -76,10 +76,10 @@ class MessageScraper:
                     message = {
                         'message': message,
                         'date_delivered': date_delivered,
-                        'reaction': 1,
+                        'is_reaction': 1,
                         'hasEmoji': False,
                         'associated_message_guid': associated_message_guid,
-                        'messager': sender_index
+                        'is_from_me': sender_index
                     }
             else:
                 if not just_get_message:
@@ -87,8 +87,8 @@ class MessageScraper:
                         'message': message,
                         'date_delivered': date_delivered,
                         'guid': guid,
-                        'reaction': 0,
-                        'messager': sender_index
+                        'is_reaction': 0,
+                        'is_from_me': sender_index
                     }
                     if attachment_file is not None:
                         message['attachment'] = 'http://localhost:5000/attachments/' + os.path.basename(attachment_file)
@@ -200,7 +200,7 @@ class MessageScraper:
                 reactions = []
                 for rawReaction in rawReactions:
                     reaction = {
-                        'messager': rawReaction['user']['id'] == MESSENGER_ID,
+                        'is_from_me': rawReaction['user']['id'] == MESSENGER_ID,
                         'has_emoji': True,
                         'emoji': rawReaction['reaction']
                     }
@@ -211,8 +211,8 @@ class MessageScraper:
                 message = {
                     'message': raw['message']['text'],
                     'date_delivered': time.strftime('%Y-%m-%d %H:%M:%S'),
-                    'reaction': 0,
-                    'messager': raw['message_sender']['id'] == MESSENGER_ID,
+                    'is_reaction': 0,
+                    'is_from_me': raw['message_sender']['id'] == MESSENGER_ID,
                     'reactions': reactions
                 }
 

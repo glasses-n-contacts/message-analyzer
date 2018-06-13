@@ -65,9 +65,9 @@ Run `python app.py` to start the server which contains API calls to analyze text
     {
         message: text message content,
         date_delivered: delivered date,
-        reaction: 1 for reaction, 0 for other,
+        is_reaction: 1 for reaction, 0 for other,
         associated_message_guid: (only for reactions) the message guid associated with the reaction,
-        messager: 1 for 'me', 0 for the other,
+        is_from_me: 1 for 'me', 0 for the other,
         attachment: (only for messages with attachment) filename of the attachment,
         guid: (only for non-reactions) guid of the message,
         reactions: for messenger, reactions are already attached to messages,
@@ -78,7 +78,7 @@ Run `python app.py` to start the server which contains API calls to analyze text
     reaction format:
     ```
     {
-        messager: 1 for 'me', 0 for the other,
+        is_from_me: 1 for 'me', 0 for the other,
         has_emoji: 1 if the message doesn't need to be mapped to an emoji,
         emoji: the reaction emoji, the field only exists if has_emoji == 1,
     }
