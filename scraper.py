@@ -50,9 +50,9 @@ class MessageScraper:
             # Write everything to file
             f0 = open(directory + "message_data0.txt", "w+")
             f1 = open(directory + "message_data1.txt", "w+")
-            json0 = open(directory + "imessage_detailed0.json", "w+")
-            json1 = open(directory + "imessage_detailed1.json", "w+")
-            jsonall = open(directory + "imessage_detailed_all.json", "w+")
+            json0 = open(directory + "imessage_data0.json", "w+")
+            json1 = open(directory + "imessage_data1.json", "w+")
+            jsonall = open(directory + "imessage_all.json", "w+")
 
         my_texts = []
         other_texts = []
@@ -209,11 +209,10 @@ class MessageScraper:
 
 if __name__ == '__main__':
     scraper = MessageScraper(ABSOLUTE_PATH, CONTACT_INFO, NAME)
-    # MessageScraper.get_fb_messenger_source(MESSENGER_USERNAME)
-    my_texts, other_texts, allMessages = scraper.get_imessage_texts(
-        write_to_file=True, just_get_message=False, include_reaction=True)
     MessageScraper.get_fb_messenger_source(MESSENGER_USERNAME)
-    scraper.get_messenger_messages(False)
+    # my_texts, other_texts, allMessages = scraper.get_imessage_texts(
+    #     write_to_file=True, just_get_message=False, include_reaction=True)
+    # scraper.get_messenger_messages(False)
     # scraper.get_texts()
     # my_texts, other_texts = scraper.all_messages()
     # print(my_texts)
