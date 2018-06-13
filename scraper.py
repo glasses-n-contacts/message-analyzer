@@ -10,6 +10,7 @@ import server
 import json
 import operator
 from shutil import copy
+from scraper_helper import link_reactions_for_imessages, hook_messenger_attachment
 
 class MessageScraper:
 
@@ -64,10 +65,7 @@ class MessageScraper:
             if (message is None or len(message) == 0):
                 continue
 
-            if date_delivered != '2000-12-31 18:00:00':
-                message_to_text = message + '; ' + date_delivered + '\n'
-            else:
-                message_to_text = message
+            message_to_text = message + '\n'
 
             if (associated_message_guid is not None):
                 if not include_reaction:
@@ -77,7 +75,7 @@ class MessageScraper:
                         'message': message,
                         'date_delivered': date_delivered,
                         'is_reaction': 1,
-                        'hasEmoji': False,
+                        'has_emoji': False,
                         'associated_message_guid': associated_message_guid,
                         'is_from_me': sender_index
                     }
@@ -88,6 +86,7 @@ class MessageScraper:
                         'date_delivered': date_delivered,
                         'guid': guid,
                         'is_reaction': 0,
+                        'reactions': [],
                         'is_from_me': sender_index
                     }
                     if attachment_file is not None:
@@ -109,6 +108,9 @@ class MessageScraper:
                     f1.write(message_to_text)
                 my_texts.append(message)
             allMessages.append(message)
+        
+        if not just_get_message:
+            allMessages = link_reactions_for_imessages(allMessages)
         
         if write_to_file:
             json.dump(my_texts, json0)
@@ -222,6 +224,9 @@ class MessageScraper:
                     if story_attachment['media']:
                         message['attachment'] = story_attachment['media']['image']['uri']
                     message['message'] = story_attachment['title_with_entities']['text']
+                
+                hook_messenger_attachment(message, raw)
+                
                 allMessages.append(message)
         
         allMessages = sorted(allMessages, key=operator.itemgetter('date_delivered'))
