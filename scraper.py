@@ -90,7 +90,9 @@ class MessageScraper:
                         'is_from_me': sender_index
                     }
                     if attachment_file is not None:
-                        message['attachment'] = 'http://localhost:5000/attachments/' + os.path.basename(attachment_file)
+                        message['attachments'] = [{
+                            'url': 'http://localhost:5000/attachments/' + os.path.basename(attachment_file)
+                        }]
                         if write_to_file:
                             try:
                                 copy(os.path.expanduser(attachment_file),
@@ -217,13 +219,6 @@ class MessageScraper:
                     'is_from_me': raw['message_sender']['id'] == MESSENGER_ID,
                     'reactions': reactions
                 }
-
-                if not message['message'] and raw['extensible_attachment']:
-                    story_attachment = raw['extensible_attachment']['story_attachment']
-                    message['is_system_message'] = 1
-                    if story_attachment['media']:
-                        message['attachment'] = story_attachment['media']['image']['uri']
-                    message['message'] = story_attachment['title_with_entities']['text']
                 
                 hook_messenger_attachment(message, raw)
                 

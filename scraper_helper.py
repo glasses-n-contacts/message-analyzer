@@ -21,22 +21,42 @@ def link_reactions_for_imessages(allMessages):
     return ret
 
 # parse for messenger message attachments
-# messenger has multiple attachments -_- need to support that later
 def hook_messenger_attachment(message, raw):
+    attachments = []
+
+    if not message['message'] and raw['extensible_attachment']:
+        story_attachment = raw['extensible_attachment']['story_attachment']
+        message['is_system_message'] = 1
+        if story_attachment['media']:
+            attachments.append({
+                'url': story_attachment['media']['image']['uri']
+            })
+        message['message'] = story_attachment['title_with_entities']['text']
+
     if 'blob_attachments' in raw:
         blobs = raw['blob_attachments']
         if len(blobs) > 0:
-            # support for multiple later
-            attachment = blobs[0]
-            if 'large_preview' in attachment:
-                message['attachment'] = attachment['large_preview']['uri']
-            
-            if 'animated_image' in attachment:
-                message['attachment'] = attachment['animated_image']['uri']
-            
-            if 'url' in attachment:
-                message['attachment'] = attachment['url']
+            for blob in blobs:
+                if 'large_preview' in blob:
+                    attachments.append({
+                        'url': blob['large_preview']['uri']
+                    })
+                
+                if 'animated_image' in blob:
+                    attachments.append({
+                        'url': blob['animated_image']['uri']
+                    })
+                
+                if 'url' in blob:
+                    attachments.append({
+                        'filename': blob['filename'],
+                        'url': blob['url']
+                    })
     
     sticker = raw['sticker']
     if sticker:
-        message['attachment'] = sticker['url']
+        attachments.append({
+            'url': sticker['url']
+        })
+    
+    message['attachments'] = attachments
