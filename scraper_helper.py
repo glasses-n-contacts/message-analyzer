@@ -21,13 +21,22 @@ def link_reactions_for_imessages(allMessages):
     return ret
 
 # parse for messenger message attachments
+# messenger has multiple attachments -_- need to support that later
 def hook_messenger_attachment(message, raw):
     if 'blob_attachments' in raw:
         blobs = raw['blob_attachments']
         if len(blobs) > 0:
+            # support for multiple later
             attachment = blobs[0]
             if 'large_preview' in attachment:
                 message['attachment'] = attachment['large_preview']['uri']
             
             if 'animated_image' in attachment:
                 message['attachment'] = attachment['animated_image']['uri']
+            
+            if 'url' in attachment:
+                message['attachment'] = attachment['url']
+    
+    sticker = raw['sticker']
+    if sticker:
+        message['attachment'] = sticker['url']
