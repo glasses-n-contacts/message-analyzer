@@ -12,6 +12,7 @@ import operator
 from shutil import copy
 from scraper_helper import link_reactions_for_imessages, hook_messenger_attachment
 
+
 class MessageScraper:
 
     '''
@@ -191,22 +192,23 @@ class MessageScraper:
             return return_data
     
     # need data/messenger_all.json
-    def all_messenger_from_json(self):
-        allMessages = []
+    @staticmethod
+    def all_messenger_from_json(just_text=False):
+        all_messages = []
         with open('data/messenger_all.json') as f:
             data = json.load(f)
             for raw in data:
-                if ('message' not in raw):
+                if 'message' not in raw:
                     # meta messages
                     continue
 
-                rawReactions = raw['message_reactions']
+                raw_reactions = raw['message_reactions']
                 reactions = []
-                for rawReaction in rawReactions:
+                for raw_reaction in raw_reactions:
                     reaction = {
-                        'is_from_me': rawReaction['user']['id'] == MESSENGER_ID,
+                        'is_from_me': raw_reaction['user']['id'] == MESSENGER_ID,
                         'has_emoji': True,
-                        'emoji': rawReaction['reaction']
+                        'emoji': raw_reaction['reaction']
                     }
                     reactions.append(reaction)
                 
@@ -219,13 +221,22 @@ class MessageScraper:
                     'is_from_me': raw['message_sender']['id'] == MESSENGER_ID,
                     'reactions': reactions
                 }
-                
+
                 hook_messenger_attachment(message, raw)
                 
-                allMessages.append(message)
+                all_messages.append(message)
         
-        allMessages = sorted(allMessages, key=operator.itemgetter('date_delivered'))
-        return allMessages
+        all_messages = sorted(all_messages, key=operator.itemgetter('date_delivered'))
+        if just_text:
+            return_messages = {NAME: [], TARGETS[1]: []}
+            for message in all_messages:
+                if message['is_from_me']:
+                    return_messages[NAME].append(message['message'])
+                else:
+                    return_messages[TARGETS[1]].append(message['message'])
+            return return_messages
+
+        return all_messages
     
     def all_for_frontend(self):
         _, _, imessages = self.get_imessage_texts(
@@ -237,7 +248,7 @@ class MessageScraper:
         return messages
 
     def all_messages(self, write_to_db=True):
-        messenger_texts = self.get_messenger_messages()
+        messenger_texts = self.all_messenger_from_json(True) #self.get_messenger_messages()
         my_messages = messenger_texts[self.my_name]
 
         names = messenger_texts.keys()
@@ -261,7 +272,8 @@ class MessageScraper:
 
 if __name__ == '__main__':
     scraper = MessageScraper(ABSOLUTE_PATH, CONTACT_INFO, NAME)
-    scraper.all_messenger_from_json()
+    print(scraper.all_messenger_from_json(True))
+
     # MessageScraper.get_fb_messenger_source(MESSENGER_USERNAME)
     # my_texts, other_texts, allMessages = scraper.get_imessage_texts(
     #     write_to_file=True, just_get_message=False, include_reaction=True)
