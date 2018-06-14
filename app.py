@@ -3,44 +3,50 @@ from flask import Flask, render_template, send_from_directory, jsonify, request,
 from analyzer import MessageAnalyzer
 from scraper import MessageScraper
 from variables import *
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, support_credentials=True)
 
 scraper = MessageScraper(ABSOLUTE_PATH, CONTACT_INFO, NAME)
 
 @app.route("/")
 @app.route("/home")
+@cross_origin(supports_credentials=True)
 def home():
     return render_template('home.html')
 
-
 @app.route("/all_texts", methods=["GET"])
+@cross_origin(supports_credentials=True)
 def all_texts():
     my_texts, other_texts = scraper.all_messages()
     return jsonify(my_texts + other_texts)
 
 @app.route("/imessages", methods=["GET"])
+@cross_origin(supports_credentials=True)
 def imessages():
     _, _, all_texts = scraper.get_imessage_texts(
         write_to_file=False, just_get_message=False, include_reaction=True)
     return jsonify(all_texts)
 
 @app.route("/messenger", methods=["GET"])
+@cross_origin(supports_credentials=True)
 def messenger():
     all_messenger = scraper.all_messenger_from_json()
     return jsonify(all_messenger)
 
 @app.route("/all_detailed", methods=["GET"])
+@cross_origin(supports_credentials=True)
 def all_detailed():
     return jsonify(scraper.all_for_frontend())
 
 @app.route('/attachments/<path:path>')
+@cross_origin(supports_credentials=True)
 def send_attachment(path):
     return send_from_directory('data/attachments', path)
 
 @app.route("/frequencies", methods=["GET"])
+@cross_origin(supports_credentials=True)
 def get_frequencies():
     my_texts, other_texts = scraper.all_messages(write_to_db=False)
     my_analyzer = MessageAnalyzer(my_texts)
