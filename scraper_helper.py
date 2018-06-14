@@ -4,7 +4,7 @@
 # return the new list without the reactions
 def link_reactions_for_imessages(all_messages):
     ret = []
-    idxs = None
+    idx = None
     for message in all_messages:
         if not message['is_reaction']:
             ret.append(message)
