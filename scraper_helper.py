@@ -1,24 +1,28 @@
+
+
 # associate reactions to the messages they react to
 # return the new list without the reactions
-def link_reactions_for_imessages(allMessages):
+def link_reactions_for_imessages(all_messages):
     ret = []
-    for message in allMessages:
+    idxs = None
+    for message in all_messages:
         if not message['is_reaction']:
             ret.append(message)
             continue
         
         # find the associated message index
         # the message that this reaction is reacting to
-        for index, content in enumerate(allMessages):
+        for index, content in enumerate(all_messages):
             if 'guid' in content and content['guid'] in message['associated_message_guid']:
                 idx = index
 
         if idx is None:
             continue
         
-        reacted = allMessages[idx]
+        reacted = all_messages[idx]
         reacted['reactions'].append(message)
     return ret
+
 
 # parse for messenger message attachments
 def hook_messenger_attachment(message, raw):
